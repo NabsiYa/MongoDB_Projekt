@@ -1,3 +1,10 @@
+function createAndAppendListItem(root, context)
+{
+    const element = document.createElement('li');
+    element.innerHTML = context;
+    root.appendChild(element);
+}
+
 async function updateList()
 {
     const response = await fetch('http://localhost:6969/users/list', {
@@ -15,16 +22,10 @@ async function updateList()
         
         const listElement = document.createElement('ul');
 
-        const usernameItem = document.createElement('li');
-        usernameItem.innerHTML = user.username;
-        const dateItem = document.createElement('li');
-        dateItem.innerHTML = user.date;
-        const idItem = document.createElement('li');
-        idItem.innerHTML = user._id;
-
-        listElement.appendChild(usernameItem);
-        listElement.appendChild(dateItem);
-        listElement.appendChild(idItem);
+        // Append list items to the list.
+        createAndAppendListItem(listElement, user.username);
+        createAndAppendListItem(listElement, user.date);
+        createAndAppendListItem(listElement, user._id);
 
         userList.appendChild(listElement);
     }
@@ -101,7 +102,17 @@ async function updatePerson()
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
-    }).then(result => {
+    }).then(async result => {
+        // get json result
+        var data = await result.json();
+        // announce
+        if (data.message == "username_in_use")
+            alert('user with the username already exists.');
         updateList();
     });
+}
+
+window.onload = () => {
+    // once the site loads update the list, once.
+    updateList();
 }
