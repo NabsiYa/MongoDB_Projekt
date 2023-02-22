@@ -2,7 +2,7 @@ const userModel = require('../schema/UserSchema');
 
 async function userUpdateHandler(req, res)
 {
-    const user = await userModel.find({ username: req.body.username });
+    const user = await userModel.find({ username: req.body.new_username });
     if (user.length !== 0)
         return res.status(200).json({'message': 'username_in_use'});
     
